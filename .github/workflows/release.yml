@@ -35,7 +35,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Check Dependencies' License
-        uses: apache/skywalking-eyes/dependency@main      # always prefer to use a revision instead of `main`.
+        uses: apache/skywalking-eyes/dependency@v0.6.0
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
