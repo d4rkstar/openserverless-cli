@@ -27,33 +27,33 @@ import (
 )
 
 func validateTool() error {
-	flag := flag.NewFlagSet("validate", flag.ContinueOnError)
+	flagSet := flag.NewFlagSet("validate", flag.ContinueOnError)
 
-	flag.Usage = printValidateHelp
+	flagSet.Usage = printValidateHelp
 
-	helpFlag := flag.Bool("h", false, "Print this help message.")
-	envFlag := flag.Bool("e", false, "Retrieve value from the environment variable with the given name.")
-	mailFlag := flag.Bool("m", false, "Check if the value is a valid email address.")
-	numberFlag := flag.Bool("n", false, "Check if the value is a number.")
-	regexFlag := flag.String("r", "", "Check if the value matches the given regular expression.")
+	helpFlag := flagSet.Bool("h", false, "Print this help message.")
+	envFlag := flagSet.Bool("e", false, "Retrieve value from the environment variable with the given name.")
+	mailFlag := flagSet.Bool("m", false, "Check if the value is a valid email address.")
+	numberFlag := flagSet.Bool("n", false, "Check if the value is a number.")
+	regexFlag := flagSet.String("r", "", "Check if the value matches the given regular expression.")
 
-	err := flag.Parse(os.Args[1:])
+	err := flagSet.Parse(os.Args[1:])
 	if err != nil {
 		return err
 	}
 
 	if *helpFlag {
-		flag.Usage()
+		flagSet.Usage()
 		return nil
 	}
 
-	if flag.NArg() != 1 && flag.NArg() != 2 {
-		flag.Usage()
+	if flagSet.NArg() != 1 && flagSet.NArg() != 2 {
+		flagSet.Usage()
 		return errors.New("invalid number of arguments")
 	}
 
-	arg := flag.Arg(0)
-	customErr := flag.Arg(1)
+	arg := flagSet.Arg(0)
+	customErr := flagSet.Arg(1)
 	if customErr == "" {
 		customErr = "validation failed"
 	}
@@ -68,14 +68,14 @@ func validateTool() error {
 
 	if *mailFlag {
 		if !isValidEmail(value) {
-			return fmt.Errorf(customErr)
+			return fmt.Errorf("%s", customErr)
 		}
 		return nil
 	}
 
 	if *numberFlag {
 		if !isValidNumber(value) {
-			return fmt.Errorf(customErr)
+			return fmt.Errorf("%s", customErr)
 		}
 		return nil
 	}
@@ -87,7 +87,7 @@ func validateTool() error {
 		}
 
 		if !valid {
-			return fmt.Errorf(customErr)
+			return fmt.Errorf("%s", customErr)
 		}
 	}
 
